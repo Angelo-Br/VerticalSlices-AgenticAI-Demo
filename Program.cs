@@ -23,7 +23,7 @@ builder.Services.AddEndpoints(typeof(Program).Assembly);
 
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 
-// Configure the database and interceptors
+// Configure the database and interceptors.
 builder.Services.AddSingleton<BaseEntityInterceptor>();
 builder.Services.AddDbContext<AppDbContext>((sp, options) =>
 {

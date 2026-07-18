@@ -20,7 +20,6 @@ public static class CancelOrder
             Guid customerId,
             Guid orderId)
         {
-           
             return Results.Ok(new Response(Guid.NewGuid()));
         }
     }
