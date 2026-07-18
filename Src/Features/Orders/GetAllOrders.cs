@@ -1,11 +1,14 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using VerticalSlicesDemo.Domain.Entities;
+using VerticalSlicesDemo.Infrastructure.Databases;
 using VerticalSlicesDemo.Infrastructure.MinimalAPIReflection;
 
 namespace VerticalSlicesDemo.Features.Orders;
 
 public static class GetAllOrders
 {
-    private record Response(Guid OrderId);
+    private record Response(List<Order> Orders);
 
     // Endpoint class 
     public class Endpoint : IEndpoint
@@ -18,6 +21,7 @@ public static class GetAllOrders
         
         // logic handling part of the endpoint, combined with response part of the minimal API endpoint
         private static async Task<IResult> Handler(
+            AppDbContext dbContext,
             Guid customerId,
             [FromQuery] int page = 1,
             [FromQuery] int pageSize = 20)
@@ -28,7 +32,9 @@ public static class GetAllOrders
             if (pageSize is < 1 or > 100)
                 return Results.BadRequest("PageSize must be between 1 and 100");
 
-            return Results.Ok(new Response(Guid.NewGuid()));
+            var result = await dbContext.Orders.ToListAsync();
+
+            return Results.Ok(new Response(result));
         }
     }
 }

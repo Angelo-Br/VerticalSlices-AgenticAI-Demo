@@ -1,4 +1,6 @@
 using FluentValidation;
+using VerticalSlicesDemo.Domain.Entities;
+using VerticalSlicesDemo.Infrastructure.Databases;
 using VerticalSlicesDemo.Infrastructure.MinimalAPIReflection;
 
 namespace VerticalSlicesDemo.Features.Orders;
@@ -63,6 +65,7 @@ public static class CreateOrder
         }
         
         private static async Task<IResult> Handler(
+            AppDbContext dbContext,
             Guid customerId,
             Request body,
             IValidator<Request> validator
@@ -75,13 +78,19 @@ public static class CreateOrder
             }
             
             // Place order in database
-            
+           var newOrder = new Order()
+           {
+               ItemName = "example",
+               Price = 1,
+           }; 
+           
+           dbContext.Orders.Add(newOrder);
+           await dbContext.SaveChangesAsync();
 
-            // Return results
-            var orderId = Guid.NewGuid();
-            return Results.Created(
-                $"/customers/{customerId}/orders/{orderId}",
-                new Response(orderId));
+           // Return results
+           return Results.Created(
+               $"/customers/{customerId}/orders/{newOrder.Id}",
+               new Response(newOrder.Id)); 
         }
     }
     #endregion
