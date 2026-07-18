@@ -1,0 +1,45 @@
+{
+  "version": 2,
+  "dgSpecHash": "xbhiW7PlxVE=",
+  "success": true,
+  "projectFilePath": "/home/john/RiderProjects/VerticalSlicesDemo/VerticalSlicesDemo.csproj",
+  "expectedPackageFiles": [
+    "/home/john/.nuget/packages/asp.versioning.abstractions/10.0.0/asp.versioning.abstractions.10.0.0.nupkg.sha512",
+    "/home/john/.nuget/packages/asp.versioning.http/10.0.0/asp.versioning.http.10.0.0.nupkg.sha512",
+    "/home/john/.nuget/packages/asp.versioning.mvc/10.0.0/asp.versioning.mvc.10.0.0.nupkg.sha512",
+    "/home/john/.nuget/packages/asp.versioning.mvc.apiexplorer/10.0.0/asp.versioning.mvc.apiexplorer.10.0.0.nupkg.sha512",
+    "/home/john/.nuget/packages/asp.versioning.openapi/10.0.0-rc.1/asp.versioning.openapi.10.0.0-rc.1.nupkg.sha512",
+    "/home/john/.nuget/packages/fluentvalidation/12.1.1/fluentvalidation.12.1.1.nupkg.sha512",
+    "/home/john/.nuget/packages/fluentvalidation.dependencyinjectionextensions/12.1.1/fluentvalidation.dependencyinjectionextensions.12.1.1.nupkg.sha512",
+    "/home/john/.nuget/packages/microsoft.aspnetcore.openapi/10.0.8/microsoft.aspnetcore.openapi.10.0.8.nupkg.sha512",
+    "/home/john/.nuget/packages/microsoft.entityframeworkcore/10.0.9/microsoft.entityframeworkcore.10.0.9.nupkg.sha512",
+    "/home/john/.nuget/packages/microsoft.entityframeworkcore.abstractions/10.0.9/microsoft.entityframeworkcore.abstractions.10.0.9.nupkg.sha512",
+    "/home/john/.nuget/packages/microsoft.entityframeworkcore.analyzers/10.0.9/microsoft.entityframeworkcore.analyzers.10.0.9.nupkg.sha512",
+    "/home/john/.nuget/packages/microsoft.entityframeworkcore.inmemory/10.0.9/microsoft.entityframeworkcore.inmemory.10.0.9.nupkg.sha512",
+    "/home/john/.nuget/packages/microsoft.extensions.caching.abstractions/10.0.9/microsoft.extensions.caching.abstractions.10.0.9.nupkg.sha512",
+    "/home/john/.nuget/packages/microsoft.extensions.caching.memory/10.0.9/microsoft.extensions.caching.memory.10.0.9.nupkg.sha512",
+    "/home/john/.nuget/packages/microsoft.extensions.dependencyinjection/10.0.9/microsoft.extensions.dependencyinjection.10.0.9.nupkg.sha512",
+    "/home/john/.nuget/packages/microsoft.extensions.dependencyinjection.abstractions/10.0.9/microsoft.extensions.dependencyinjection.abstractions.10.0.9.nupkg.sha512",
+    "/home/john/.nuget/packages/microsoft.extensions.logging/10.0.9/microsoft.extensions.logging.10.0.9.nupkg.sha512",
+    "/home/john/.nuget/packages/microsoft.extensions.logging.abstractions/10.0.9/microsoft.extensions.logging.abstractions.10.0.9.nupkg.sha512",
+    "/home/john/.nuget/packages/microsoft.extensions.options/10.0.9/microsoft.extensions.options.10.0.9.nupkg.sha512",
+    "/home/john/.nuget/packages/microsoft.extensions.primitives/10.0.9/microsoft.extensions.primitives.10.0.9.nupkg.sha512",
+    "/home/john/.nuget/packages/microsoft.openapi/2.0.0/microsoft.openapi.2.0.0.nupkg.sha512",
+    "/home/john/.nuget/packages/scalar.aspnetcore/2.16.4/scalar.aspnetcore.2.16.4.nupkg.sha512",
+    "/home/john/.nuget/packages/microsoft.aspnetcore.app.ref/10.0.9/microsoft.aspnetcore.app.ref.10.0.9.nupkg.sha512"
+  ],
+  "logs": [
+    {
+      "code": "NU1603",
+      "level": "Warning",
+      "message": "Asp.Versioning.OpenApi 10.0.0-rc.1 depends on Asp.Versioning.Mvc.ApiExplorer (>= 10.0.0-rc.1) but Asp.Versioning.Mvc.ApiExplorer 10.0.0-rc.1 was not found. Asp.Versioning.Mvc.ApiExplorer 10.0.0 was resolved instead.",
+      "projectPath": "/home/john/RiderProjects/VerticalSlicesDemo/VerticalSlicesDemo.csproj",
+      "warningLevel": 1,
+      "filePath": "/home/john/RiderProjects/VerticalSlicesDemo/VerticalSlicesDemo.csproj",
+      "libraryId": "Asp.Versioning.Mvc.ApiExplorer",
+      "targetGraphs": [
+        "net10.0"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+namespace VerticalSlicesDemo.Infrastructure.Services;
+
+public class AzureKeyVaultService
+{
+    // JUST AN EXAMPLE OF WHAT A SERVICE COULD BE, A USE OF AN EXTERNAL INFRASTRUCTURE
+    // COMPONENT THAT CAN BE INJECTED INTO THE FEATURES THEMSELVES
+}
