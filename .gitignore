@@ -208,3 +208,8 @@ FakesAssemblies/
 
 # JetBrains Rider
 *.sln.iml
+.idea/
+
+# Local secrets (keep .env.example)
+.env
+

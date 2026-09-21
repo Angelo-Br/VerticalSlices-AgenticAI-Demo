@@ -1,0 +1,14 @@
+---
+description: Keep Docs/ARCHITECTURE.md in sync with architecture-relevant code changes.
+alwaysApply: true
+---
+
+# Architecture doc
+
+When you add, remove, or change architecture-relevant code, **update `Docs/ARCHITECTURE.md` in the same turn**. Do not wait for the user to ask.
+
+Architecture-relevant means anything that would make the doc lie: new/removed slices or routes, domain entities, persistence/schema behavior, OpenAPI wiring, Docker/compose/env, request pipeline, or how endpoints are discovered.
+
+Skip the update for typo-only or purely local refactors that do not change those facts.
+
+Keep the doc factual and current. If a section is now wrong, rewrite it; do not append a changelog of stale paragraphs.
