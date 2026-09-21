@@ -16,7 +16,10 @@ services:
       timeout: 5s
       retries: 10
 
+  # Opt-in: docker compose --profile app up --build
+  # Day-to-day: docker compose up db, then run the http profile in Rider.
   app:
+    profiles: ["app"]
     build: .
     env_file: .env
     environment:
