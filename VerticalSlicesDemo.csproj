@@ -5,6 +5,7 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <UserSecretsId>verticalslicesdemo-4e8a1c2b-9d3f-4a7e-b6c1-2f8e0d5a91c4</UserSecretsId>
     </PropertyGroup>
 
     <ItemGroup>

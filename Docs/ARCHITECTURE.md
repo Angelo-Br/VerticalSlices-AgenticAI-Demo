@@ -12,11 +12,11 @@ HTTP  →  api/v{version}  →  IEndpoint slice  →  AppDbContext  →  Postgre
                 └── OpenAPI per version  →  Scalar UI
 ```
 
-`Program.cs` loads `.env` (keys not already in the environment), registers versioning, OpenAPI, FluentValidation, endpoint discovery, Npgsql, and problem details. After mapping endpoints it calls `Database.EnsureCreated()` — that creates missing tables, it does not evolve them. Migrations are the upgrade path once the model needs to change.
+`Program.cs` registers versioning, OpenAPI, FluentValidation, endpoint discovery, Npgsql, and problem details. After mapping endpoints it calls `Database.EnsureCreated()` — that creates missing tables, it does not evolve them. Migrations are the upgrade path once the model needs to change.
 
 HTTPS redirection is skipped when `DOTNET_RUNNING_IN_CONTAINER=true`. Production uses the exception handler + HSTS; all environments add cache/CSP/frame/nosniff/referrer headers and RFC 7807 status-code pages.
 
-Connection string is built from `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB`, and `POSTGRES_HOST` (defaults to `localhost`).
+EF uses `ConnectionStrings:DefaultConnection` via `IConfiguration.GetConnectionString`. Local Rider loads it from `appsettings.Development.json` (override with user secrets). The Compose app service sets `ConnectionStrings__DefaultConnection` with host `db`. `.env` is only for the Postgres image (`POSTGRES_USER` / `POSTGRES_PASSWORD` / `POSTGRES_DB`); the API does not parse it.
 
 ## Layout
 
@@ -33,7 +33,7 @@ Connection string is built from `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_
 | `Src/Features/Orders/Shared` | Empty placeholder folder |
 | `Tools/` | File-based check apps, excluded from the web project compile |
 | `Docs/` | This document |
-| `docker-compose.yml`, `Dockerfile`, `.env` | Postgres + optional published app image |
+| `docker-compose.yml`, `Dockerfile`, `.env` | Postgres image env + optional published app image |
 
 ## Vertical slices
 
@@ -85,11 +85,11 @@ Nested types in every slice are named `Request`, `Response`, `AddressRequest`, e
 
 ## Local vs Docker
 
-**Default development:** `docker compose up db`, then Rider **http** profile (`http://localhost:5039/scalar`). `.env` has `POSTGRES_HOST=localhost`.
+**Default development:** `docker compose up db`, then Rider **http** profile (`http://localhost:5039/scalar`). Development connection string targets `localhost` and must match the Compose Postgres user/db.
 
-**Published stack:** `docker compose --profile app up --build` — API on `8080`, Postgres hostname inside the network is `db`. Compose profile `app` is opt-in so a plain `docker compose up` does not rebuild the API image.
+**Published stack:** `docker compose --profile app up --build` — API on `8080`. Compose interpolates `.env` into `ConnectionStrings__DefaultConnection` (host `db`). Profile `app` is opt-in so a plain `docker compose up` does not rebuild the API image.
 
-`.env` is not baked into the image (`.dockerignore`); Compose injects it via `env_file`.
+`.env` is not baked into the image (`.dockerignore`). The app container does not receive `env_file`; only the connection-string environment variable.
 
 ## Checks
 

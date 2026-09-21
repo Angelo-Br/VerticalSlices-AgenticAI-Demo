@@ -8,8 +8,6 @@ using Scalar.AspNetCore;
 using VerticalSlicesDemo.Infrastructure.Databases;
 using VerticalSlicesDemo.Infrastructure.OpenApi;
 
-LoadDotEnv(".env");
-
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 
@@ -32,10 +30,12 @@ builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 
 // Configure the database and interceptors.
 builder.Services.AddSingleton<BaseEntityInterceptor>();
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+    ?? throw new InvalidOperationException("Connection string 'DefaultConnection' is not set.");
 builder.Services.AddDbContext<AppDbContext>((sp, options) =>
 {
     options
-        .UseNpgsql(BuildPostgresConnectionString(builder.Configuration))
+        .UseNpgsql(connectionString)
         .AddInterceptors(sp.GetRequiredService<BaseEntityInterceptor>());
 });
 
@@ -117,49 +117,6 @@ if (!string.Equals(Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAIN
 
 app.Run();
 
-static string BuildPostgresConnectionString(IConfiguration configuration)
-{
-    var user = configuration["POSTGRES_USER"]
-        ?? throw new InvalidOperationException("POSTGRES_USER is not set.");
-    var password = configuration["POSTGRES_PASSWORD"]
-        ?? throw new InvalidOperationException("POSTGRES_PASSWORD is not set.");
-    var database = configuration["POSTGRES_DB"]
-        ?? throw new InvalidOperationException("POSTGRES_DB is not set.");
-    var host = configuration["POSTGRES_HOST"] ?? "localhost";
-
-    return $"Host={host};Username={user};Password={password};Database={database}";
-}
-
-static void LoadDotEnv(string path)
-{
-    if (!File.Exists(path))
-    {
-        return;
-    }
-
-    foreach (var line in File.ReadLines(path))
-    {
-        var trimmed = line.Trim();
-        if (trimmed.Length == 0 || trimmed[0] == '#')
-        {
-            continue;
-        }
-
-        var eq = trimmed.IndexOf('=');
-        if (eq <= 0)
-        {
-            continue;
-        }
-
-        var key = trimmed[..eq].Trim();
-        if (Environment.GetEnvironmentVariable(key) is not null)
-        {
-            continue;
-        }
-
-        Environment.SetEnvironmentVariable(key, trimmed[(eq + 1)..].Trim());
-    }
-}
 
 
 
