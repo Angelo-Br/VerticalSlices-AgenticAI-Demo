@@ -2,9 +2,13 @@ using VerticalSlicesDemo.Infrastructure.MinimalAPIReflection;
 using Asp.Versioning;
 using Asp.Versioning.Builder;
 using FluentValidation;
+using Microsoft.AspNetCore.OpenApi;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 using VerticalSlicesDemo.Infrastructure.Databases;
+using VerticalSlicesDemo.Infrastructure.OpenApi;
+
+LoadDotEnv(".env");
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
@@ -19,6 +23,9 @@ builder.Services.AddApiVersioning()
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
+// ConfigureAll so this also covers the per-version documents registered by Asp.Versioning.
+builder.Services.ConfigureAll<OpenApiOptions>(options => options.CreateSchemaReferenceId = SchemaIds.Qualified);
+
 builder.Services.AddEndpoints(typeof(Program).Assembly);
 
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
@@ -28,7 +35,7 @@ builder.Services.AddSingleton<BaseEntityInterceptor>();
 builder.Services.AddDbContext<AppDbContext>((sp, options) =>
 {
     options
-        .UseInMemoryDatabase("db")
+        .UseNpgsql(BuildPostgresConnectionString(builder.Configuration))
         .AddInterceptors(sp.GetRequiredService<BaseEntityInterceptor>());
 });
 
@@ -65,6 +72,12 @@ RouteGroupBuilder versionedGroup = app
 
 app.MapEndpoints(versionedGroup);
 
+// ponytail: EnsureCreated does not evolve schema. Switch to Migrate() once you add EF migrations.
+using (var scope = app.Services.CreateScope())
+{
+    scope.ServiceProvider.GetRequiredService<AppDbContext>().Database.EnsureCreated();
+}
+
 app.Use(async (context, next) =>
 {
     context.Response.Headers.Append("Cache-Control", "no-store");
@@ -97,9 +110,56 @@ if (app.Environment.IsProduction())
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
+if (!string.Equals(Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER"), "true", StringComparison.OrdinalIgnoreCase))
+{
+    app.UseHttpsRedirection();
+}
 
 app.Run();
+
+static string BuildPostgresConnectionString(IConfiguration configuration)
+{
+    var user = configuration["POSTGRES_USER"]
+        ?? throw new InvalidOperationException("POSTGRES_USER is not set.");
+    var password = configuration["POSTGRES_PASSWORD"]
+        ?? throw new InvalidOperationException("POSTGRES_PASSWORD is not set.");
+    var database = configuration["POSTGRES_DB"]
+        ?? throw new InvalidOperationException("POSTGRES_DB is not set.");
+    var host = configuration["POSTGRES_HOST"] ?? "localhost";
+
+    return $"Host={host};Username={user};Password={password};Database={database}";
+}
+
+static void LoadDotEnv(string path)
+{
+    if (!File.Exists(path))
+    {
+        return;
+    }
+
+    foreach (var line in File.ReadLines(path))
+    {
+        var trimmed = line.Trim();
+        if (trimmed.Length == 0 || trimmed[0] == '#')
+        {
+            continue;
+        }
+
+        var eq = trimmed.IndexOf('=');
+        if (eq <= 0)
+        {
+            continue;
+        }
+
+        var key = trimmed[..eq].Trim();
+        if (Environment.GetEnvironmentVariable(key) is not null)
+        {
+            continue;
+        }
+
+        Environment.SetEnvironmentVariable(key, trimmed[(eq + 1)..].Trim());
+    }
+}
 
 
 
