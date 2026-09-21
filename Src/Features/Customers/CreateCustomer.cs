@@ -83,7 +83,7 @@ public static class CreateCustomer
             Request body,
             IValidator<Request> validator)
         {
-            // Validate incoming request
+            // Validate incoming request.
             var result = await validator.ValidateAsync(body);
             if (!result.IsValid)
             {
