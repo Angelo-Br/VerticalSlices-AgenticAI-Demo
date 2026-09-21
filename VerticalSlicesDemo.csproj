@@ -18,9 +18,22 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Src\Features\Customers\" />
       <Folder Include="Src\Features\Orders\Shared\" />
       <Folder Include="Src\Infrastructure\Logging\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include=".agents\skills\langfuse\references\ci-cd.md" />
+      <Content Include=".agents\skills\langfuse\references\cli.md" />
+      <Content Include=".agents\skills\langfuse\references\error-analysis.md" />
+      <Content Include=".agents\skills\langfuse\references\instrumentation.md" />
+      <Content Include=".agents\skills\langfuse\references\judge-calibration.md" />
+      <Content Include=".agents\skills\langfuse\references\prompt-migration.md" />
+      <Content Include=".agents\skills\langfuse\references\sdk-upgrade.md" />
+      <Content Include=".agents\skills\langfuse\references\skill-feedback.md" />
+      <Content Include=".agents\skills\langfuse\references\user-feedback.md" />
+      <Content Include=".agents\skills\langfuse\SKILL.md" />
+      <Content Include=".cursor\rules\ponytail.mdc" />
     </ItemGroup>
 
 </Project>

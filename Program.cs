@@ -76,6 +76,11 @@ app.Use(async (context, next) =>
     await next();
 });
 
+// compliance to rfc 7807 https://datatracker.ietf.org/doc/html/rfc7807
+app.UseStatusCodePages(async statusCodeContext 
+    => await Results.Problem(statusCode: statusCodeContext.HttpContext.Response.StatusCode)
+        .ExecuteAsync(statusCodeContext.HttpContext));
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -84,7 +89,11 @@ if (app.Environment.IsDevelopment())
 
 if (app.Environment.IsProduction())
 {
-    app.UseExceptionHandler();
+    // compliance to rfc 7807 https://datatracker.ietf.org/doc/html/rfc7807
+    app.UseExceptionHandler(exceptionHandlerApp 
+        => exceptionHandlerApp.Run(async context 
+            => await Results.Problem()
+                .ExecuteAsync(context)));
     app.UseHsts();
 }
 

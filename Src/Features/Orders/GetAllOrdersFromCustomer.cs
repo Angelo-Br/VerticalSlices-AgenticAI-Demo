@@ -6,7 +6,7 @@ using VerticalSlicesDemo.Infrastructure.MinimalAPIReflection;
 
 namespace VerticalSlicesDemo.Features.Orders;
 
-public static class GetAllOrders
+public static class GetAllOrdersFromCustomer
 {
     private record Response(List<Order> Orders);
 
@@ -32,9 +32,18 @@ public static class GetAllOrders
             if (pageSize is < 1 or > 100)
                 return Results.BadRequest("PageSize must be between 1 and 100");
 
-            var result = await dbContext.Orders.ToListAsync();
+            var orders = await dbContext.Orders
+                .Where(x => x.CustomerId == customerId)
+                .Include(x => x.OrderProducts)
+                .ThenInclude(x => x.Product)
+                .Include(x => x.BillingAddress)
+                .Include(x => x.DeliveryAddress)
+                .OrderByDescending(x => x.CreatedAt)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
 
-            return Results.Ok(new Response(result));
+            return Results.Ok(new Response(orders));
         }
     }
 }
